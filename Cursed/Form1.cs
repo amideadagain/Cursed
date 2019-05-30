@@ -20,6 +20,69 @@ namespace Cursed
             InitializeComponent();
         }
 
+        public string dio;
+
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Cursed\Cursed\Database1.mdf;Integrated Security=True";
+
+        public void jojo(string dio)
+        {
+            SqlConnection myConnection = new SqlConnection(connectionString);
+
+            myConnection.Open();
+
+            string stand = dio;
+
+            SqlCommand command = new SqlCommand(stand, myConnection);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            List<string[]> data = new List<string[]>();
+
+            while (reader.Read())
+            {
+                data.Add(new string[10]);
+
+                data[data.Count - 1][0] = reader[0].ToString();
+                data[data.Count - 1][1] = reader[1].ToString();
+                data[data.Count - 1][2] = reader[2].ToString();
+                data[data.Count - 1][3] = reader[3].ToString();
+                data[data.Count - 1][4] = reader[4].ToString();
+                data[data.Count - 1][5] = reader[5].ToString();
+                data[data.Count - 1][6] = reader[6].ToString();
+                data[data.Count - 1][7] = reader[7].ToString();
+                data[data.Count - 1][8] = reader[8].ToString();
+            }
+            reader.Close();
+
+            myConnection.Close();
+
+            foreach (string[] s in data)
+                dataGridView1.Rows.Add(s);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            string dio = "SELECT * FROM Abiturient ORDER BY Id";
+            jojo(dio);
+
+
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
+                sqlConnection.Close();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
+                sqlConnection.Close();
+        }
+
+        
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -48,6 +111,42 @@ namespace Cursed
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private async void button1_Click_1(object sender, EventArgs e)
+        {
+            sqlConnection = new SqlConnection(connectionString);
+
+            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) &&
+                !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrWhiteSpace(textBox2.Text) &&
+                !string.IsNullOrEmpty(textBox3.Text) && !string.IsNullOrWhiteSpace(textBox3.Text) &&
+                !string.IsNullOrEmpty(textBox4.Text) && !string.IsNullOrWhiteSpace(textBox4.Text) &&
+                !string.IsNullOrEmpty(textBox5.Text) && !string.IsNullOrWhiteSpace(textBox5.Text) &&
+                !string.IsNullOrEmpty(textBox6.Text) && !string.IsNullOrWhiteSpace(textBox6.Text) &&
+                !string.IsNullOrEmpty(textBox7.Text) && !string.IsNullOrWhiteSpace(textBox7.Text) &&
+                !string.IsNullOrEmpty(textBox8.Text) && !string.IsNullOrWhiteSpace(textBox8.Text) &&
+                !string.IsNullOrEmpty(textBox9.Text) && !string.IsNullOrWhiteSpace(textBox9.Text))
+            {
+                SqlCommand command = new SqlCommand("INSERT INTO [Abiturient] (Id, Фамилия,Имя,Отчество,Год_рождения,первый,второй,третий,Аттестат)" +
+                "VALUES (@Id, @Фамилия,@Имя,@Отчество,@Год_рождения,@первый,@второй,@третий,@Аттестат)", sqlConnection);
+
+                command.Parameters.AddWithValue("Id", textBox1.Text);
+                command.Parameters.AddWithValue("Фамилия", textBox2.Text);
+                command.Parameters.AddWithValue("Имя", textBox3.Text);
+                command.Parameters.AddWithValue("Отчество", textBox4.Text);
+                command.Parameters.AddWithValue("Год_рождения", textBox5.Text);
+                command.Parameters.AddWithValue("первый", textBox6.Text);
+                command.Parameters.AddWithValue("второй", textBox7.Text);
+                command.Parameters.AddWithValue("третий", textBox8.Text);
+                command.Parameters.AddWithValue("Аттестат", textBox9.Text);
+
+                await sqlConnection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+            else
+            {
+                MessageBox.Show("Заполните ВСЕ поля");
+            }
         }
     }
 }
