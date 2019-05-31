@@ -18,6 +18,10 @@ namespace Cursed
         public Form1()
         {
             InitializeComponent();
+
+            Form2 PF = new Form2();
+            if (PF.ShowDialog() == DialogResult.Cancel)
+                Application.Exit();
         }
 
         public string dio;
@@ -147,6 +151,155 @@ namespace Cursed
             {
                 MessageBox.Show("Заполните ВСЕ поля");
             }
+        }
+
+        private void обновитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+
+            SqlDataReader sqlReader = null;
+
+            dio = "SELECT Id, Фамилия,Имя,Отчество,Год_рождения,первый,второй,третий,Аттестат FROM[Abiturient]";
+
+            SqlCommand command = new SqlCommand(dio, sqlConnection);
+            try
+            {
+                jojo(dio);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), ex.Source.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (sqlReader != null)
+                    sqlReader.Close();
+            }
+        }
+
+        
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void файлToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            sqlConnection = new SqlConnection(connectionString);
+
+                    if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) &&
+                    !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrWhiteSpace(textBox2.Text) &&
+                    !string.IsNullOrEmpty(textBox3.Text) && !string.IsNullOrWhiteSpace(textBox3.Text) &&
+                    !string.IsNullOrEmpty(textBox4.Text) && !string.IsNullOrWhiteSpace(textBox4.Text) &&
+                    !string.IsNullOrEmpty(textBox5.Text) && !string.IsNullOrWhiteSpace(textBox5.Text) &&
+                    !string.IsNullOrEmpty(textBox6.Text) && !string.IsNullOrWhiteSpace(textBox6.Text) &&
+                    !string.IsNullOrEmpty(textBox7.Text) && !string.IsNullOrWhiteSpace(textBox7.Text) &&
+                    !string.IsNullOrEmpty(textBox8.Text) && !string.IsNullOrWhiteSpace(textBox8.Text) &&
+                    !string.IsNullOrEmpty(textBox9.Text) && !string.IsNullOrWhiteSpace(textBox9.Text))
+                    {
+                        
+                        SqlCommand command = new SqlCommand("UPDATE [Abiturient] SET [Фамилия]=@Фамилия" +
+                        ",[Имя]= @Имя,[Отчество]=@Отчество,[Год_рождения]=@Год_рождения,[первый]=@первый,[второй]=@второй," +
+                        "[третий]=@третий,[Аттестат]=@Аттестат WHERE [Id]= @Id", sqlConnection);
+
+                    command.Parameters.AddWithValue("Id", textBox1.Text);
+                    command.Parameters.AddWithValue("Фамилия", textBox2.Text);
+                    command.Parameters.AddWithValue("Имя", textBox3.Text);
+                    command.Parameters.AddWithValue("Отчество", textBox4.Text);
+                    command.Parameters.AddWithValue("Год_рождения", textBox5.Text);
+                    command.Parameters.AddWithValue("первый", textBox6.Text);
+                    command.Parameters.AddWithValue("второй", textBox7.Text);
+                    command.Parameters.AddWithValue("третий", textBox8.Text);
+                    command.Parameters.AddWithValue("Аттестат", textBox9.Text);
+
+                    await sqlConnection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+                else
+                {
+                    MessageBox.Show("Заполните ВСЕ поля");
+                }
+            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox5.Clear();
+            textBox6.Clear();
+            textBox7.Clear();
+            textBox8.Clear();
+            textBox9.Clear();
+        }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            sqlConnection = new SqlConnection(connectionString);
+
+            if (!string.IsNullOrEmpty(textBox10.Text) && !string.IsNullOrWhiteSpace(textBox10.Text))
+            {
+                SqlCommand command = new SqlCommand("DELETE FROM [Abiturient] WHERE [Фамилия]=@Фамилия", sqlConnection);
+
+                command.Parameters.AddWithValue("Фамилия", textBox10.Text);
+                await sqlConnection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+            else
+            {
+                MessageBox.Show("Заполните поле");
+            }
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox11_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            sqlConnection = new SqlConnection(connectionString);
+
+            if (!string.IsNullOrEmpty(textBox11.Text) && !string.IsNullOrWhiteSpace(textBox11.Text))
+            {
+                SqlCommand command = new SqlCommand("DELETE FROM [Abiturient] WHERE [Аттестат]<@Аттестат", sqlConnection);
+                
+                command.Parameters.AddWithValue("Аттестат", textBox11.Text);
+                await sqlConnection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+            else
+            {
+                MessageBox.Show("Заполните поле");
+            }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
